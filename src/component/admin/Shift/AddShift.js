@@ -259,11 +259,11 @@ const AddShift = () => {
               </button>
             </div>
           </form>
-          {name}
+          {/* {name}
           <br/>
           {time_from}
           <br/>
-          {time_to} 
+          {time_to}  */}
          
         </div>
       </div>

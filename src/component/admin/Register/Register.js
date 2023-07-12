@@ -1,4 +1,4 @@
-import axios from "../../../api/axios";
+// import axios from "../../../api/axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthUser from "../../AuthUser";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 
 const Register = () => {
+
   const { http, setToken } = AuthUser();
 
   const [role, setRole] = useState();
@@ -20,6 +21,8 @@ const Register = () => {
   const [phone_number, setPhone_number] = useState();
 
   const [designation, setDesignation] = useState();
+
+  const [shift_id, setShift_id] = useState();
 
   const [show, setShow] = useState(true);
 
@@ -46,17 +49,18 @@ const Register = () => {
         password: password,
         phone: phone_number,
         designation: designation,
+        shift_id: shift_id,
       })
       .then((res) => {
         // setToken(res.data.user,res.data.access_token);
         navigate("/");
-        alert("succesful upload");
+        alert("successfuly upload");
       });
   };
 
   const [shifts, setShifts] = useState([]); // State to store the fetched data
 
-  const[Showshift, setShowshift] = useState();
+//   const[Showshift, setShowshift] = useState();
 
   const {token} = AuthUser()
 
@@ -69,7 +73,7 @@ const Register = () => {
         },
     })
       .then(response => {
-        // console.log(response.data.shifts)
+        console.log(response.data.shifts)
         setShifts(response.data.shifts); // Update the data state with the fetched data
       })
       .catch(error => {
@@ -161,16 +165,17 @@ const Register = () => {
                 <select
                   id="countries"
                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  onChange={(e) => setShowshift(e.target.value) }
+                  onChange={(e) => setShift_id(e.target.value) }
                   
                 >
                   <option  selected disabled>Select Time</option>
                   {shifts.map((item,index) => (
 
-                  <option value={item} key={index}>{item.id} {item.name} </option>
+                  <option value={item.id} key={index}>{item.id} {item.name} </option>
                   ))}
                 </select>
               )}
+                  
               <div>
                 <label
                   htmlFor="Name"

@@ -1,7 +1,17 @@
 import React,{useState, useEffect} from "react";
-
+import axios from "axios"
+import AuthUser from '../AuthUser';
 const Header = () => {
+
+  // const [shifts, setShifts] = useState([]); // State to store the fetched data
+
+  const {token,user} = AuthUser();
+
+  const[user_id, setUser_id] = useState([]);
+
+  // console.log(user)
   const [time, setTime] = useState(0);
+
   const [isRunning, setIsRunning] = useState(false);
   useEffect(() => {
     let intervalId;
@@ -18,22 +28,103 @@ const Header = () => {
   const handleToggle = () => {
     setIsRunning((prevIsRunning) => !prevIsRunning);
   };
-
-  const handleReset = () => {
-    setTime(0);
-    setIsRunning(false);
-  };
+  
   const formatTime = () => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
-
+    
     const formattedTime = [hours, minutes, seconds]
-      .map((unit) => String(unit).padStart(2, "0"))
-      .join(":");
-
+    .map((unit) => String(unit).padStart(2, "0"))
+    .join(":");
+    
     return formattedTime;
   };
+
+// break in time
+const [breaktime, setbreakTime] = useState(0);
+
+const [isRunningbreak, setIsRunningbreak] = useState(false);
+useEffect(() => {
+  let intervalId;
+  if (isRunningbreak) {
+    intervalId = setInterval(() => {
+      setbreakTime((prevbreakTime) => prevbreakTime + 1);
+    }, 500);
+  }
+
+  return () => {
+    clearInterval(intervalId);
+  };
+}, [isRunningbreak]);
+const handleTogglebreak = () => {
+  setIsRunningbreak((prevIsRunningbreak) => !prevIsRunningbreak);
+};
+
+const formatTimebreak = () => {
+  const hours = Math.floor(breaktime / 3600);
+  const minutes = Math.floor((breaktime % 3600) / 60);
+  const seconds = breaktime % 60;
+  
+  const formattedTimebreak = [hours, minutes, seconds]
+  .map((unit) => String(unit).padStart(2, "0"))
+  .join(":");
+  
+  return formattedTimebreak;
+};
+
+  
+
+ 
+  const timeid = () => {
+    axios.get(`https://crm.businesswayz.com/public/api/attendence/time_in/${user.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  })
+    .then(response => {
+      console.log(response.data)
+      // setShifts(response.data.shifts); // Update the data state with the fetched data
+    })
+    .catch(error => {
+      console.log('Error fetching data:', error);
+    });
+  }
+
+  const timeout = () => {
+    axios.get(`https://crm.businesswayz.com/public/api/attendence/time_out/${user.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  })
+    .then(response => {
+      console.log(response.data)
+      // setShifts(response.data.shifts); // Update the data state with the fetched data
+    })
+    .catch(error => {
+      console.log('Error fetching data:', error);
+    });
+  }
+
+const breakIn = () => {
+  axios.get(`https://crm.businesswayz.com/public/api/break/break_in`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+})
+  .then(response => {
+    console.log(response.data)
+    // setShifts(response.data.shifts); // Update the data state with the fetched data
+  })
+  .catch(error => {
+    console.log('Error fetching data:', error);
+  });
+}
+
+
 
   return (
     <>
@@ -82,15 +173,53 @@ const Header = () => {
             </form>
           </div>
           <div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center ">
               <div className="flex justify-center items-center" >
                 <h1>{formatTime()}</h1>
-                <button className="text-white mx-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                onClick={handleToggle}>
-                  {isRunning ? "Time_Out" : "Time_In"}
+                {
+                  isRunning ? 
+                  <>
+                  <button className="text-white mx-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                onClick={() => {handleToggle();
+                timeout()}}>
+                  Time_Out
                 </button>
-                {/* <button onClick={handleReset}>Reset</button> */}
+                  </> :
+                  <>
+                
+                <button className="text-white mx-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                onClick={() => {handleToggle();
+                timeid()}}>
+                Time_In
+                </button>
+                  </>
+                }
+                
               </div>
+
+              <div className="flex justify-center items-center" >
+                <h1>{formatTimebreak()}</h1>
+                {
+                  isRunningbreak ? 
+                  <>
+                  <button className="text-white mx-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                onClick={() => {handleTogglebreak();
+                timeout()}}>
+                  Break_Out
+                </button>
+                  </> :
+                  <>
+                
+                <button className="text-white mx-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                onClick={() => {handleTogglebreak();
+                timeid()}}>
+                Break_In
+                </button>
+                  </>
+                }
+                
+              </div>
+
             </div>
           </div>
           <div>

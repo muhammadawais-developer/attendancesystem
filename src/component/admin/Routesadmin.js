@@ -1,10 +1,9 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from '../layout/Layout'
-import Dashboard from './dashboard'
-import Sidenav from './sidenav'
-// import ShowShift from '../../pages/admin/shift/ShowShift'
-import Showshift from './Shift/Showshift'
+import Dashboard from './Dashboard'
+import Sidenav from './Sidenav'
+import Showshift from './Shift/ShowShift'
 const Routesadmin = () => {
   return (
     <>

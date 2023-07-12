@@ -8,13 +8,6 @@ import ShowAttedence from '../../component/user/Attedences/ShowAttedence';
 
 const User = () => {
 
-  // const [timeValue, setTimeValue] = useState('');
-
-  // const handleTimeChange = (event) => {
-  //   const { value } = event.target;
-  //   setTimeValue(value);
-  // };
-
   return (
     <>
     <Sidenav/>
